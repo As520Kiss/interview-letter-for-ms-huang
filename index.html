@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>给黄女士的采访信</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9f7f7 0%, #dbe2ef 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #3a506b;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            color: #5c677d;
+            margin-bottom: 40px;
+            font-size: 1.2rem;
+        }
+        
+        .envelope-container {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            margin: 0 auto 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .envelope-container:hover {
+            transform: scale(1.05);
+        }
+        
+        .envelope {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #ff9a9e;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 2;
+        }
+        
+        .envelope.opened {
+            transform: translateY(-100px);
+            opacity: 0.7;
+            z-index: 1;
+        }
+        
+        .envelope-front {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-bottom: 100px solid #ff7e7e;
+            top: 0;
+            left: 0;
+        }
+        
+        .envelope-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #ff9a9e;
+            border-radius: 10px;
+            z-index: 1;
+        }
+        
+        .flap {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid #ff6b6b;
+            top: 0;
+            left: 0;
+            transform-origin: top;
+            transition: transform 0.8s ease;
+            z-index: 3;
+        }
+        
+        .envelope-container.opened .flap {
+            transform: rotateX(180deg);
+        }
+        
+        .letter {
+            position: absolute;
+            width: 280px;
+            height: 180px;
+            background: #fff;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            left: 10px;
+            top: 10px;
+            z-index: 1;
+            transition: all 0.8s 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .letter.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            z-index: 3;
+        }
+        
+        .letter-content {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .letter h2 {
+            color: #3a506b;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .letter p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .full-letter {
+            background: #fff;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+            max-width: 700px;
+            text-align: left;
+            line-height: 1.7;
+        }
+        
+        .full-letter.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .letter-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .letter-header h2 {
+            color: #3a506b;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .letter-header p {
+            color: #5c677d;
+            font-size: 1.1rem;
+        }
+        
+        .letter-body {
+            margin-bottom: 30px;
+        }
+        
+        .letter-body p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #444;
+        }
+        
+        .questions {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border-left: 4px solid #3a506b;
+        }
+        
+        .questions h3 {
+            color: #3a506b;
+            margin-bottom: 15px;
+        }
+        
+        .questions ul {
+            padding-left: 20px;
+        }
+        
+        .questions li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .letter-footer {
+            text-align: right;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: #3a506b;
+            margin-top: 10px;
+        }
+        
+        .instruction {
+            margin-top: 20px;
+            color: #5c677d;
+            font-style: italic;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #4a6fa5, #3a506b);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(58, 80, 107, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(58, 80, 107, 0.4);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .heart {
+            color: #ff6b6b;
+            animation: heartbeat 1.5s infinite;
+            display: inline-block;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .flowers {
+            font-size: 1.5rem;
+            letter-spacing: 10px;
+            margin: 20px 0;
+            color: #ff9a9e;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .envelope-container {
+                width: 250px;
+                height: 167px;
+            }
+            
+            .envelope-front, .flap {
+                border-left-width: 125px;
+                border-right-width: 125px;
+                border-bottom-width: 83px;
+            }
+            
+            .flap {
+                border-top-width: 83px;
+            }
+            
+            .letter {
+                width: 230px;
+                height: 150px;
+                left: 10px;
+                top: 8px;
+                padding: 15px;
+            }
+            
+            .full-letter {
+                padding: 25px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>给黄女士的采访信</h1>
+        <p class="subtitle">点击信封开启信件 <i class="fas fa-arrow-down"></i></p>
+        
+        <div class="envelope-container" id="envelopeContainer">
+            <div class="envelope" id="envelope">
+                <div class="envelope-front"></div>
+                <div class="envelope-back"></div>
+                <div class="flap"></div>
+            </div>
+            <div class="letter" id="letterPreview">
+                <div class="letter-content">
+                    <h2>采访邀请</h2>
+                    <p>亲爱的黄女士：</p>
+                    <p>点击下方按钮查看完整信件</p>
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn" id="showFullLetterBtn">
+            <i class="fas fa-envelope-open-text"></i> 展开完整信件
+        </button>
+        
+        <div class="full-letter" id="fullLetter">
+            <div class="letter-header">
+                <h2>给黄女士的采访信</h2>
+                <p>一封温暖的问候与采访邀请</p>
+                <div class="flowers">✿ ❀ ✾ ❁ ✽</div>
+            </div>
+            
+            <div class="letter-body">
+                <p>亲爱的黄女士：</p>
+                
+                <p>您好！</p>
+                
+                <p>听闻您明天即将回家，我们由衷地为您感到高兴。在您离开之前，我们希望能有机会听您分享这段时间的感受、经历与收获。</p>
+                
+                <p>无论您是短暂出行还是长期在外，相信这段时光一定给您带来了不同的体验与感悟。我们真诚地希望能记录下这些宝贵的时刻，聆听您的心声。</p>
+                
+                <div class="questions">
+                    <h3>如果您愿意分享，我们想了解：</h3>
+                    <ul>
+                        <li>这段时间里最让您难忘的经历是什么？</li>
+                        <li>这次出行带给您最大的收获或感悟是什么？</li>
+                        <li>对于即将回家的心情，您有什么想说的吗？</li>
+                        <li>有没有特别想感谢的人或想分享的故事？</li>
+                        <li>对未来有什么新的期待或计划？</li>
+                    </ul>
+                </div>
+                
+                <p>您的故事和感受对我们来说非常宝贵。无论您想分享什么，我们都将怀着最大的尊重和真诚聆听。</p>
+                
+                <p>回家路上，请您注意安全，一路平安。期待听到您的分享，也祝愿您与家人团聚时光温馨美好。</p>
+            </div>
+            
+            <div class="letter-footer">
+                <p>衷心祝福，</p>
+                <div class="signature">您的朋友们</div>
+                <p>2023年</p>
+            </div>
+        </div>
+        
+        <p class="instruction">祝黄女士一路平安，回家愉快 <span class="heart">❤</span></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const envelopeContainer = document.getElementById('envelopeContainer');
+            const envelope = document.getElementById('envelope');
+            const letterPreview = document.getElementById('letterPreview');
+            const showFullLetterBtn = document.getElementById('showFullLetterBtn');
+            const fullLetter = document.getElementById('fullLetter');
+            
+            // 信封点击事件
+            envelopeContainer.addEventListener('click', function() {
+                envelopeContainer.classList.add('opened');
+                envelope.classList.add('opened');
+                
+                // 延迟显示信件预览
+                setTimeout(() => {
+                    letterPreview.classList.add('revealed');
+                }, 500);
+            });
+            
+            // 显示完整信件按钮点击事件
+            showFullLetterBtn.addEventListener('click', function() {
+                // 如果信封还没打开，先打开信封
+                if (!envelopeContainer.classList.contains('opened')) {
+                    envelopeContainer.classList.add('opened');
+                    envelope.classList.add('opened');
+                    
+                    setTimeout(() => {
+                        letterPreview.classList.add('revealed');
+                    }, 500);
+                }
+                
+                // 滚动到完整信件位置
+                setTimeout(() => {
+                    fullLetter.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // 显示完整信件
+                    setTimeout(() => {
+                        fullLetter.classList.add('revealed');
+                    }, 300);
+                }, 800);
+                
+                // 隐藏按钮
+                showFullLetterBtn.style.display = 'none';
+            });
+            
+            // 添加一些视觉效果
+            const heart = document.querySelector('.heart');
+            setInterval(() => {
+                heart.style.color = getRandomColor();
+            }, 2000);
+            
+            function getRandomColor() {
+                const colors = ['#ff6b6b', '#4a6fa5', '#3a506b', '#ff9a9e', '#5c677d'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            // 初始显示按钮和信封
+            showFullLetterBtn.style.opacity = '1';
+            envelopeContainer.style.opacity = '1';
+        });
+    </script>
+</body>
+</html>
